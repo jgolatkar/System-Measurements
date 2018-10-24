@@ -24,7 +24,9 @@ double time_spent(struct timespec t1, struct timespec t2){
 	}
 
 
-void *func(void *it){}
+void *func(void *it){
+	//spthread_exit(NULL);
+}
 
 int main() {
 
@@ -33,6 +35,7 @@ int main() {
 	pthread_t tid;
 	clock_gettime(CLOCK_REALTIME, &start);
 	pthread_create(&tid, NULL, func, NULL);
+	//pthread_join(tid, NULL);
 	clock_gettime(CLOCK_REALTIME, &finish);
 	
 	printf("thread creation time : %.2f us \n", time_spent(start, finish)/1000);

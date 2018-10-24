@@ -37,7 +37,6 @@ int func_arg_seven(int a, int b ,int c, int d, int e, int f, int g){ return 0;};
 int main(){
 	
 	struct timespec start, finish;
-
 	double total_time = 0; 
 	long ITR = 1000000;
 	
@@ -49,21 +48,21 @@ int main(){
 
 		}
 
-		printf("\n avg time taken 0 arg: %.2f us\n", (total_time / 1000) / ITR);
+		printf("\n avg time taken 0 arg: %.2f us\n", (total_time) / ITR);
 		total_time = 0;	
 
 		for(int i = 0; i < ITR; i++){
 			clock_gettime(CLOCK_REALTIME, &start);
 
 				func_arg_one(1);
-
 			clock_gettime(CLOCK_REALTIME, &finish);
 			total_time = total_time + time_spent(start,finish);
-
+			
 		}
 		
-		printf("\n avg time taken 1 arg: %.2f us\n", (total_time / 1000) / ITR);
+		printf("\n avg time taken 1 arg: %.2f us\n", (total_time) / ITR);
 		total_time = 0;	
+
 		for(int i = 0; i < ITR; i++){
 			clock_gettime(CLOCK_REALTIME, &start);
 
@@ -73,7 +72,7 @@ int main(){
 			total_time = total_time + time_spent(start,finish);
 
 		}
-		printf("\n avg time taken 2 arg: %.2f us\n", (total_time / 1000) / ITR);
+		printf("\n avg time taken 2 arg: %.2f us\n", (total_time ) / ITR);
 		total_time = 0;	
 
 		for(int i = 0; i < ITR; i++){
@@ -86,7 +85,7 @@ int main(){
 
 		}
 		
-		printf("\n avg time taken 3 arg: %.2f us\n", (total_time / 1000) / ITR);
+		printf("\n avg time taken 3 arg: %.2f us\n", (total_time) / ITR);
 		total_time = 0;	
 
 		for(int i = 0; i < ITR; i++){
@@ -99,7 +98,7 @@ int main(){
 
 		}
 	
-		printf("\n avg time taken 4 arg: %.2f us\n", (total_time / 1000) / ITR);
+		printf("\n avg time taken 4 arg: %.2f us\n", (total_time) / ITR);
 		total_time = 0;	
 		for(int i = 0; i < ITR; i++){
 			clock_gettime(CLOCK_REALTIME, &start);
@@ -111,7 +110,7 @@ int main(){
 
 		}
 		
-		printf("\n avg time taken 5 arg: %.2f us\n", (total_time / 1000) / ITR);
+		printf("\n avg time taken 5 arg: %.2f us\n", (total_time) / ITR);
 		total_time = 0;	
 		for(int i = 0; i < ITR; i++){
 			clock_gettime(CLOCK_REALTIME, &start);
@@ -123,7 +122,7 @@ int main(){
 
 		}
 		
-		printf("\n avg time taken 6 arg: %.2f us\n", (total_time / 1000) / ITR);
+		printf("\n avg time taken 6 arg: %.2f us\n", (total_time) / ITR);
 		total_time = 0;	
 		for(int i = 0; i < ITR; i++){
 			clock_gettime(CLOCK_REALTIME, &start);
@@ -136,7 +135,7 @@ int main(){
 		}
 		
 
-		printf("\n avg time taken 7 arg: %.2f us\n", (total_time / 1000) / ITR);
+		printf("\n avg time taken 7 arg: %.2f us\n", (total_time) / ITR);
 
 	
 

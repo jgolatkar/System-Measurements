@@ -10,7 +10,7 @@
 #include<time.h>
 #include<unistd.h>
 #include<stdlib.h>
-
+#include<sys/wait.h>
 #define NANOSECONDS 1000000000
 #define MILLISECONDS 1000000
 
@@ -27,19 +27,18 @@ int main() {
 
 	struct timespec start, finish;
 	
-	pid_t pid;
+	int pid;
 	clock_gettime(CLOCK_REALTIME, &start);
 	pid = fork();
-	clock_gettime(CLOCK_REALTIME, &finish);
-	if(pid < 0){
-		printf("fork failed");
-		return 1;	
-	}
+	
 	
 	if (pid == 0){ 
-		return 0;
+		exit(0);
 	}
+	wait(NULL);
+	clock_gettime(CLOCK_REALTIME, &finish);
 	printf("process creation time : %.2f us \n", time_spent(start, finish)/1000);
+	
 
 
 }

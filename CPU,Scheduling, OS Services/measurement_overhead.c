@@ -9,8 +9,9 @@
 
 #include<stdio.h>
 #include<time.h>
+#include<stdlib.h>
 
-#define LOOP_COUNT 1000000
+#define LOOP_COUNT 10000
 #define NANOSECONDS 1000000000
 
 
@@ -28,28 +29,26 @@ int main(){
 	
 	struct timespec start, finish;
 	int a = 0;
+	char *buffer = (char*)malloc(sizeof(char));
 	
 	/*calculating overhead for using loop*/
 	clock_gettime(CLOCK_REALTIME, &start); // start time
 	for(int i=0;i<LOOP_COUNT;i++){
-		a++;
+		
 	}
 	clock_gettime(CLOCK_REALTIME, &finish); // end time
 
-	double diff = time_spent(start, finish) / MILLISECONDS; //converting time to milliseconds
-	printf("\noverhead to run loop : %.2f ms\n", diff);
+	double diff = time_spent(start, finish) / 1000; //converting time to microseconds
+	printf("\noverhead to run loop : %.2f us\n", diff);
 	
 	/* calculating overhead for reading time*/
 	a = 0;
-	double total_time = 0; 
-	for(int i=0;i<LOOP_COUNT;i++){
-		clock_gettime(CLOCK_REALTIME, &start);
-		clock_gettime(CLOCK_REALTIME, &finish);
-		total_time = total_time + time_spent(start,finish);
-	}
 
-	total_time = total_time / 1000;
-	printf("\noverhead of reading : %.2f us\n", total_time);
+	clock_gettime(CLOCK_REALTIME, &start); // start time
+	buffer[0] = 'a';
+	clock_gettime(CLOCK_REALTIME, &finish); // end time
+	diff = time_spent(start, finish) / 1000; //converting time to microseconds
+	printf("\n overhead of reading : %.2f us\n", diff);
 
 }
 

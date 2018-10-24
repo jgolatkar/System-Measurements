@@ -41,11 +41,11 @@ int main(){
 	
 	if (pid == 0){ /*child process running*/
 		
-		for(int i=0;i<1000000;i++);
+		//for(int i=0;i<1000000;i++);
 
 		return 0;
 	}
-	wait(&pid);
+	//wait(&pid);
 
 	clock_gettime(CLOCK_REALTIME, &finish);
 	printf("process runtime time : %.2f us \n", time_spent(start, finish)/1000);

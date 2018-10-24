@@ -14,9 +14,9 @@
 
 #define NANOSECONDS 1000000000
 #define MESSAGE "Hello"
-
+struct timespec start, finish;
 int a = 0;
-
+int fd[2];
 /*
 	function to find time difference 
 	Returns: time(ns) in double 
@@ -29,13 +29,15 @@ double time_spent(struct timespec t1, struct timespec t2){
 
 
 void *func(void *it){
-	//for(int i=0;i<1000000;i++);
+	clock_gettime(CLOCK_REALTIME, &finish);
+	write(fd[1], &finish, sizeof(finish));
+	pthread_exit(NULL);
 }
 
 
 int processContextSwitch(){
 	struct timespec start, finish;
-	int fd[2]; // fd[0] - Read End, fd[1] - Write End
+	//int fd[2]; // fd[0] - Read End, fd[1] - Write End
 	pid_t pid;
 	struct timespec readbuff;
 
@@ -54,41 +56,47 @@ int processContextSwitch(){
 	
 	if (pid == 0){ /*child process writing*/
 		close(fd[0]); /*closing unused read end*/
-		clock_gettime(CLOCK_REALTIME, &finish);
-		//for(int i=0;i<1000000;i++);
-		write(fd[1], &finish, sizeof(finish));
+		clock_gettime(CLOCK_REALTIME, &start);
+		write(fd[1], &start, sizeof(start));
 		close(fd[1]);
 		return 0;
 	}
 	/* parent process reading */
 	close(fd[1]);
-	clock_gettime(CLOCK_REALTIME, &start);
+	
 	read(fd[0], &readbuff, sizeof(readbuff));
+	clock_gettime(CLOCK_REALTIME, &finish);
 	close(fd[0]);
-	printf("process context switch time : %.2f us \n", time_spent(start, readbuff)/1000);
+	printf("process context switch time : %.2f us \n", time_spent(readbuff, finish)/1000);
 	
 }
 
 
 int threadContextSwitch(){
 	struct timespec start, finish;
+	//int fd[2]; // fd[0] - Read End, fd[1] - Write End
 	pthread_t tid;
 	struct timespec readbuff;
-
-	clock_gettime(CLOCK_REALTIME, &start);
+	
+	pipe(fd);
+	//clock_gettime(CLOCK_REALTIME, &start);
 	pthread_create(&tid, NULL, func, NULL);
 	
-
+	clock_gettime(CLOCK_REALTIME, &start);
 	pthread_join(tid, NULL);
-	clock_gettime(CLOCK_REALTIME, &finish);
+	close(fd[1]);
+	
+	read(fd[0], &readbuff, sizeof(readbuff));
+	//clock_gettime(CLOCK_REALTIME, &finish);
+	close(fd[0]);
 
-	printf("thread context switch time : %.2f us \n", time_spent(start, finish)/1000);
+	printf("thread context switch time : %.2f us \n", time_spent(start, readbuff)/1000);
 	return 0;
 
 }
 
 int main(){
-
+	
 	threadContextSwitch();
 	processContextSwitch();
 	
