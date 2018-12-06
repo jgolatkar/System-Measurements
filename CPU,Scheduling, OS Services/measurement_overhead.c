@@ -6,11 +6,12 @@
 	Task: Measurement Overhead 
 */
 
-
+#include"timestamp.h"
 #include<stdio.h>
 #include<time.h>
 #include<stdlib.h>
-
+#include<stdint.h>
+#include<unistd.h>
 #define LOOP_COUNT 10000
 #define NANOSECONDS 1000000000
 
@@ -27,28 +28,36 @@ double time_spent(struct timespec t1, struct timespec t2){
 
 int main(){
 	
-	struct timespec start, finish;
-	int a = 0;
-	char *buffer = (char*)malloc(sizeof(char));
+	//struct timespec start, finish;
+	unsigned long start, finish;
+	unsigned long total_time_reading, total_time_loop;
+	total_time_reading=0;
+	total_time_loop=0;
 	
 	/*calculating overhead for using loop*/
-	clock_gettime(CLOCK_REALTIME, &start); // start time
+	//clock_gettime(CLOCK_REALTIME, &start); // start time
+	start = rdtsc_begin();
 	for(int i=0;i<LOOP_COUNT;i++){
 		
 	}
-	clock_gettime(CLOCK_REALTIME, &finish); // end time
+	finish = rdtsc_end();
+	//clock_gettime(CLOCK_REALTIME, &finish); // end time
 
-	double diff = time_spent(start, finish) / 1000; //converting time to microseconds
-	printf("\noverhead to run loop : %.2f us\n", diff);
+	//total_time_loop = time_spent(start, finish);
+	total_time_loop = finish - start;
+	printf("\noverhead to run loop : %lu\n", total_time_loop / LOOP_COUNT);
 	
 	/* calculating overhead for reading time*/
-	a = 0;
-
-	clock_gettime(CLOCK_REALTIME, &start); // start time
-	buffer[0] = 'a';
-	clock_gettime(CLOCK_REALTIME, &finish); // end time
-	diff = time_spent(start, finish) / 1000; //converting time to microseconds
-	printf("\n overhead of reading : %.2f us\n", diff);
+	//rdtsc();
+	for(int i=0;i<LOOP_COUNT;i++){
+		//clock_gettime(CLOCK_REALTIME, &start); // start time
+		//clock_gettime(CLOCK_REALTIME, &finish); // end time
+		start = rdtsc_begin();
+		//sleep(10);
+		finish = rdtsc_end();
+		total_time_reading = total_time_reading + (finish - start);
+	}
+	printf("\n overhead of reading : %lu\n", total_time_reading / LOOP_COUNT);
 
 }
 

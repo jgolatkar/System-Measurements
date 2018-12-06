@@ -67,7 +67,7 @@ int processContextSwitch(){
 	read(fd[0], &readbuff, sizeof(readbuff));
 	clock_gettime(CLOCK_REALTIME, &finish);
 	close(fd[0]);
-	printf("process context switch time : %.2f us \n", time_spent(readbuff, finish)/1000);
+	printf("process context switch time : %.2f ns \n", time_spent(readbuff, finish));
 	
 }
 
@@ -90,7 +90,7 @@ int threadContextSwitch(){
 	//clock_gettime(CLOCK_REALTIME, &finish);
 	close(fd[0]);
 
-	printf("thread context switch time : %.2f us \n", time_spent(start, readbuff)/1000);
+	printf("thread context switch time : %.2f ns \n", time_spent(start, readbuff));
 	return 0;
 
 }

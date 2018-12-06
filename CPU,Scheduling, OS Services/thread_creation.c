@@ -11,8 +11,10 @@
 #include<unistd.h>
 #include<stdlib.h>
 #include<pthread.h>
-
+#include<sys/wait.h>
+#include"timestamp.h"
 #define NANOSECONDS 1000000000
+#define ITR 10000
 
 /*
 	function to find time difference 
@@ -24,21 +26,29 @@ double time_spent(struct timespec t1, struct timespec t2){
 	}
 
 
-void *func(void *it){
-	//spthread_exit(NULL);
+void *func(void *lt){
+	pthread_exit(NULL);
 }
 
 int main() {
 
-	struct timespec start, finish;
-	
+	//struct timespec start, finish;
+	//double total_time = 0;
+	unsigned long start, finish;
+	unsigned long total_time = 0;
 	pthread_t tid;
-	clock_gettime(CLOCK_REALTIME, &start);
-	pthread_create(&tid, NULL, func, NULL);
-	//pthread_join(tid, NULL);
-	clock_gettime(CLOCK_REALTIME, &finish);
 	
-	printf("thread creation time : %.2f us \n", time_spent(start, finish)/1000);
+	for(int i=0;i<ITR;i++){
+		//clock_gettime(CLOCK_MONOTONIC, &start);
+		start = rdtsc_begin();
+		pthread_create(&tid, NULL, func, NULL);
+		pthread_join(tid, NULL);
+		//clock_gettime(CLOCK_MONOTONIC, &finish);
+		finish = rdtsc_end();
+		total_time += finish-start;
+	}
+	
+	printf("thread creation time : %lu  \n", total_time/ITR);
 
 
 }

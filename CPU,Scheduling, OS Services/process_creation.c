@@ -11,8 +11,10 @@
 #include<unistd.h>
 #include<stdlib.h>
 #include<sys/wait.h>
+#include"timestamp.h"
 #define NANOSECONDS 1000000000
 #define MILLISECONDS 1000000
+#define ITR 10000
 
 /*
 	function to find time difference 
@@ -25,19 +27,27 @@ double time_spent(struct timespec t1, struct timespec t2){
 
 int main() {
 
-	struct timespec start, finish;
-	
+	//struct timespec start, finish;
+	//double total_time = 0;
+	unsigned long start, finish;
+	unsigned long total_time = 0;
 	int pid;
-	clock_gettime(CLOCK_REALTIME, &start);
+	for(int i=0;i < ITR; i++){
+	//clock_gettime(CLOCK_MONOTONIC, &start);
+	start = rdtsc_begin();	
 	pid = fork();
 	
 	
 	if (pid == 0){ 
-		exit(0);
+		exit(1);
+	}else{
+		wait(NULL);
+		finish = rdtsc_end();
+		total_time += finish - start;
 	}
-	wait(NULL);
-	clock_gettime(CLOCK_REALTIME, &finish);
-	printf("process creation time : %.2f us \n", time_spent(start, finish)/1000);
+	
+	}
+	printf("process creation time : %lu \n", total_time / ITR);
 	
 
 
