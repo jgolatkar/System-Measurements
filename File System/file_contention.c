@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include<sys/stat.h>
 #include<sys/wait.h>
+#include"timestamp.h"
 #define NANOSECONDS 1000000000 
 off_t FILESIZE;
 int n;
@@ -29,9 +30,10 @@ void readFileRandomly( int seq){
      access_list[i] = rand() % num;
   }
 
-
-struct timespec start, finish;
-	double total_time = 0;
+unsigned long start, finish;
+	unsigned long total_time = 0;
+//struct timespec start, finish;
+//	double total_time = 0;
 
   for (i = 0; i < num; i++) {
 
@@ -40,15 +42,16 @@ struct timespec start, finish;
 		exit(1);
 	}
 	lseek(fd, access_list[i] * 4096, SEEK_SET);
-	clock_gettime(CLOCK_REALTIME, &start);
-    
+	//clock_gettime(CLOCK_REALTIME, &start);
+    	start = rdtsc_begin();
     read(fd, buf, 4096);
-	clock_gettime(CLOCK_REALTIME, &finish);
-    total_time += time_spent(start, finish);
+	//clock_gettime(CLOCK_REALTIME, &finish);
+	finish = rdtsc_end();
+    total_time += finish - start;
   }
 
   close(fd);
-  printf(" %s , %.2lf\n",files[seq], total_time / ((double)num) /1000);
+  printf(" %s , %.2lf\n",files[seq], total_time / ((double)num));
 
 }
 
