@@ -64,13 +64,16 @@ int main(int argc, char *argv[])
  pid_t pids[n];
   printf("\n");
   for (i = 0; i < n; ++i) {
-    if ((pids[i] = fork()) != 0) {
-      readFileRandomly(i);
-		exit(0);
-    } 
+    if ((pids[i] = fork()) < 0) {
+      perror("fork error");
+      exit(1);
+    } else if (pids[i] == 0) {
+      readFileRandomly( i);
+      exit(0);
+    }else{
+		wait(NULL);
+	}
   }
-	for(i=0; i<proc_num; i++) {
-        wait(NULL);
-    }
+
   return 0;
 }
